@@ -5,9 +5,9 @@ import { PostModel } from './post.model';
 // 类：数据传输对象
 // Dto:DataTransferObject
 class CreatePostDto {
-    @ApiProperty({ description: '帖子标题' })
+    @ApiProperty({ description: '帖子标题',example:'帖子标题1' })
     title: string
-    @ApiProperty({ description: '帖子内容' })
+    @ApiProperty({ description: '帖子内容',example:'帖子内容1' })
     content: string
 }
 
@@ -24,7 +24,8 @@ export class PostsController {
 
     @Post()
     @ApiOperation({ summary: '创建帖子' })
-    create(@Body() body: CreatePostDto) {
+    async create(@Body() createPostDto: CreatePostDto) {
+        await PostModel.create(createPostDto)
         return {
             success: true
         }
@@ -32,16 +33,14 @@ export class PostsController {
 
     @Get(':id')
     @ApiOperation({ summary: '帖子详情' })
-    detail(@Param('id') id: string) {
-        return {
-            id: id,
-            title: '123'
-        }
+    async detail(@Param('id') id: string) {
+         return await PostModel.findById(id)
     }
 
     @Put(':id')
     @ApiOperation({ summary: '编辑帖子' })
-    update(@Param('id') id: string, @Body() body: CreatePostDto) {
+    async update(@Param('id') id: string, @Body() updatePostDto: CreatePostDto) {
+        await PostModel.findByIdAndUpdate(id, updatePostDto)
         return {
             success: true
         }
@@ -49,7 +48,8 @@ export class PostsController {
 
     @Delete(':id')
     @ApiOperation({ summary: '删除帖子' })
-    remove(@Param('id') id: string){
+    async remove(@Param('id') id: string){
+        await PostModel.findByIdAndRemove(id)
         return {
             success: true
         }
