@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Query, Param, Put, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiProperty } from '@nestjs/swagger';
+import { PostModel } from './post.model';
 
 // 类：数据传输对象
 // Dto:DataTransferObject
@@ -16,9 +17,9 @@ class CreatePostDto {
 @ApiTags('帖子')
 export class PostsController {
     @Get()
-    @ApiOperation({ summary: '显示帖子列表' })
-    index() {
-        return []
+    @ApiOperation({ summary: '帖子列表' })
+    async index() {
+        return await PostModel.find()
     }
 
     @Post()
