@@ -1,10 +1,10 @@
 /*
  * @Date: 2020-04-19 16:44:59
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-19 17:17:57
+ * @LastEditTime: 2020-04-19 18:03:16
  */
 // 定义post模型
-import { getModelForClass, prop } from '@typegoose/typegoose'
+import { prop } from '@typegoose/typegoose'
 
 export class Post{
     @prop()
@@ -12,5 +12,3 @@ export class Post{
     @prop()
     content: string
 }
-
-export const PostModel = getModelForClass(Post)

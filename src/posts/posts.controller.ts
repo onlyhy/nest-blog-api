@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Query, Param, Put, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiProperty } from '@nestjs/swagger';
-import { PostModel } from './post.model';
 import { IsNotEmpty } from 'class-validator'
+import { InjectModel } from 'nestjs-typegoose';
+import {Post as PostSchema} from './post.model'
+import { ModelType } from '@typegoose/typegoose/lib/types';
 // 类：数据传输对象
 // Dto:DataTransferObject
 class CreatePostDto {
@@ -17,16 +19,21 @@ class CreatePostDto {
 @Controller('posts')
 @ApiTags('帖子')
 export class PostsController {
+    // 依赖注入
+    constructor(
+        // nest会自动解析，找到PostSchema类，然后建了一个PostModel
+        @InjectModel(PostSchema) private readonly PostModel:ModelType<PostSchema>
+    ){}
     @Get()
     @ApiOperation({ summary: '帖子列表' })
     async index() {
-        return await PostModel.find()
+        return await this.PostModel.find()
     }
 
     @Post()
     @ApiOperation({ summary: '创建帖子' })
     async create(@Body() createPostDto: CreatePostDto) {
-        await PostModel.create(createPostDto)
+        await this.PostModel.create(createPostDto)
         return {
             success: true
         }
@@ -35,13 +42,13 @@ export class PostsController {
     @Get(':id')
     @ApiOperation({ summary: '帖子详情' })
     async detail(@Param('id') id: string) {
-         return await PostModel.findById(id)
+         return await this.PostModel.findById(id)
     }
 
     @Put(':id')
     @ApiOperation({ summary: '编辑帖子' })
     async update(@Param('id') id: string, @Body() updatePostDto: CreatePostDto) {
-        await PostModel.findByIdAndUpdate(id, updatePostDto)
+        await this.PostModel.findByIdAndUpdate(id, updatePostDto)
         return {
             success: true
         }
@@ -50,7 +57,7 @@ export class PostsController {
     @Delete(':id')
     @ApiOperation({ summary: '删除帖子' })
     async remove(@Param('id') id: string){
-        await PostModel.findByIdAndRemove(id)
+        await this.PostModel.findByIdAndRemove(id)
         return {
             success: true
         }
