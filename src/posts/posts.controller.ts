@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Query, Param, Put, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiProperty } from '@nestjs/swagger';
 import { PostModel } from './post.model';
-
+import { IsNotEmpty } from 'class-validator'
 // 类：数据传输对象
 // Dto:DataTransferObject
 class CreatePostDto {
     @ApiProperty({ description: '帖子标题',example:'帖子标题1' })
+    @IsNotEmpty({message:'请填写标题'})
     title: string
     @ApiProperty({ description: '帖子内容',example:'帖子内容1' })
     content: string
